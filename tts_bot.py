@@ -12,9 +12,6 @@ AUDIO_DIR = "tts_audio"
 os.makedirs(AUDIO_DIR, exist_ok=True)
 logging.basicConfig(level=logging.INFO)
 
-# ═══════════════════════════════════════════
-#  VOICES — 12 Male + 5 Female
-# ═══════════════════════════════════════════
 VOICES = {
     "m_davis":       {"voice": "en-US-DavisNeural",       "desc": "🎙 Davis",       "tag": "Deep & Smooth"},
     "m_tony":        {"voice": "en-US-TonyNeural",        "desc": "🎙 Tony",        "tag": "Confident"},
@@ -35,35 +32,29 @@ VOICES = {
     "f_neerja":      {"voice": "en-IN-NeerjaNeural",      "desc": "🎀 Neerja",      "tag": "Indian Female"},
 }
 
-# ═══════════════════════════════════════════
-#  STYLES
-# ═══════════════════════════════════════════
 STYLES = {
-    "default":      {"desc": "⚡ Normal",         "rate": "-3%",  "vol": "+10%"},
-    "teacher":      {"desc": "👩‍🏫 Teacher",        "rate": "-12%", "vol": "+15%"},
-    "influencer":   {"desc": "🌟 Influencer",      "rate": "+5%",  "vol": "+15%"},
-    "gamer":        {"desc": "🎮 Gamer",           "rate": "+18%", "vol": "+20%"},
-    "intro":        {"desc": "🎬 Intro / Promo",   "rate": "-8%",  "vol": "+20%"},
-    "news":         {"desc": "📰 News Anchor",      "rate": "-10%", "vol": "+15%"},
-    "story":        {"desc": "📖 Storyteller",     "rate": "-15%", "vol": "+10%"},
-    "motivational": {"desc": "💪 Motivational",    "rate": "+10%", "vol": "+20%"},
-    "podcast":      {"desc": "🎙️ Podcast Host",    "rate": "-5%",  "vol": "+12%"},
-    "kids":         {"desc": "🧒 Kids / Cartoon",  "rate": "+12%", "vol": "+15%"},
-    "horror":       {"desc": "👻 Horror",          "rate": "-22%", "vol": "+5%"},
-    "assistant":    {"desc": "🤖 AI Assistant",    "rate": "-3%",  "vol": "+10%"},
-    "angry":        {"desc": "😠 Angry",           "rate": "+22%", "vol": "+20%"},
-    "sad":          {"desc": "😢 Sad",             "rate": "-18%", "vol": "+8%"},
-    "romantic":     {"desc": "❤️ Romantic",        "rate": "-12%", "vol": "+10%"},
-    "meditation":   {"desc": "🧘 Meditation",      "rate": "-25%", "vol": "+8%"},
-    "sports":       {"desc": "⚽ Sports Caster",   "rate": "+20%", "vol": "+20%"},
-    "documentary":  {"desc": "🎥 Documentary",     "rate": "-8%",  "vol": "+12%"},
-    "whispering":   {"desc": "🤫 Whispering",      "rate": "-10%", "vol": "-20%"},
-    "announcement": {"desc": "📢 Announcement",    "rate": "-5%",  "vol": "+25%"},
+    "default":      {"desc": "⚡ Normal",         "rate": "-3%"},
+    "teacher":      {"desc": "👩‍🏫 Teacher",        "rate": "-12%"},
+    "influencer":   {"desc": "🌟 Influencer",      "rate": "+5%"},
+    "gamer":        {"desc": "🎮 Gamer",           "rate": "+18%"},
+    "intro":        {"desc": "🎬 Intro / Promo",   "rate": "-8%"},
+    "news":         {"desc": "📰 News Anchor",      "rate": "-10%"},
+    "story":        {"desc": "📖 Storyteller",     "rate": "-15%"},
+    "motivational": {"desc": "💪 Motivational",    "rate": "+10%"},
+    "podcast":      {"desc": "🎙️ Podcast Host",    "rate": "-5%"},
+    "kids":         {"desc": "🧒 Kids / Cartoon",  "rate": "+12%"},
+    "horror":       {"desc": "👻 Horror",          "rate": "-22%"},
+    "assistant":    {"desc": "🤖 AI Assistant",    "rate": "-3%"},
+    "angry":        {"desc": "😠 Angry",           "rate": "+22%"},
+    "sad":          {"desc": "😢 Sad",             "rate": "-18%"},
+    "romantic":     {"desc": "❤️ Romantic",        "rate": "-12%"},
+    "meditation":   {"desc": "🧘 Meditation",      "rate": "-25%"},
+    "sports":       {"desc": "⚽ Sports Caster",   "rate": "+20%"},
+    "documentary":  {"desc": "🎥 Documentary",     "rate": "-8%"},
+    "whispering":   {"desc": "🤫 Whispering",      "rate": "-10%"},
+    "announcement": {"desc": "📢 Announcement",    "rate": "-5%"},
 }
 
-# ═══════════════════════════════════════════
-#  PITCH LEVELS
-# ═══════════════════════════════════════════
 PITCH_MAP = {
     "p1": ("-20Hz", "⬇️⬇️⬇️ Bahut Deep"),
     "p2": ("-12Hz", "⬇️⬇️ Deep"),
@@ -79,9 +70,6 @@ DEFAULT_STYLE = "default"
 DEFAULT_PITCH = "p4"
 
 
-# ═══════════════════════════════════════════
-#  CORE SYNTHESIZE
-# ═══════════════════════════════════════════
 async def synthesize(text, vk, sk, pk, filepath):
     voice = VOICES[vk]["voice"]
     style = STYLES[sk]
@@ -90,7 +78,6 @@ async def synthesize(text, vk, sk, pk, filepath):
         text, voice,
         rate=style["rate"],
         pitch=pitch_hz,
-        volume=style["vol"],
     )
     await communicate.save(filepath)
 
@@ -110,9 +97,6 @@ def settings_text(vk, sk, pk):
     )
 
 
-# ═══════════════════════════════════════════
-#  MAIN MENU keyboard
-# ═══════════════════════════════════════════
 def main_menu_kb():
     return InlineKeyboardMarkup([
         [InlineKeyboardButton("🎙 Voice",  callback_data="menu_voice"),
@@ -122,9 +106,6 @@ def main_menu_kb():
     ])
 
 
-# ═══════════════════════════════════════════
-#  /start
-# ═══════════════════════════════════════════
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     vk, sk, pk = get_settings(context.user_data)
     await update.message.reply_text(
@@ -141,9 +122,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-# ═══════════════════════════════════════════
-#  /settings (same as start panel)
-# ═══════════════════════════════════════════
 async def settings_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     vk, sk, pk = get_settings(context.user_data)
     await update.message.reply_text(
@@ -154,9 +132,6 @@ async def settings_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-# ═══════════════════════════════════════════
-#  MENU callbacks → show sub-menus
-# ═══════════════════════════════════════════
 async def menu_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
     q = update.callback_query
     await q.answer()
@@ -236,9 +211,6 @@ async def menu_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
 
-# ═══════════════════════════════════════════
-#  VOICE / STYLE / PITCH callbacks
-# ═══════════════════════════════════════════
 async def voice_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
     q = update.callback_query
     await q.answer()
@@ -279,9 +251,6 @@ async def pitch_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-# ═══════════════════════════════════════════
-#  MESSAGE → TTS + Download button
-# ═══════════════════════════════════════════
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip()
     if not text:
@@ -306,7 +275,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         await synthesize(text, vk, sk, pk, filepath)
 
-        # Send voice message
         with open(filepath, "rb") as f:
             await update.message.reply_voice(
                 voice=f,
@@ -316,7 +284,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 ),
             )
 
-        # Send downloadable MP3
         import shutil
         shutil.copy(filepath, dl_path)
         with open(dl_path, "rb") as f:
@@ -335,22 +302,15 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await status.edit_text(f"❌ Error: {e}")
 
 
-# ═══════════════════════════════════════════
-#  MAIN
-# ═══════════════════════════════════════════
 def main():
     app = Application.builder().token(BOT_TOKEN).build()
-
     app.add_handler(CommandHandler("start",    start))
     app.add_handler(CommandHandler("settings", settings_cmd))
-
     app.add_handler(CallbackQueryHandler(menu_cb,    pattern="^menu_"))
     app.add_handler(CallbackQueryHandler(voice_cb,   pattern="^vc_"))
     app.add_handler(CallbackQueryHandler(style_cb,   pattern="^st_"))
     app.add_handler(CallbackQueryHandler(pitch_cb,   pattern="^pt_"))
-
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-
     print("✅ PRO TTS Bot chal raha hai...")
     app.run_polling()
 
